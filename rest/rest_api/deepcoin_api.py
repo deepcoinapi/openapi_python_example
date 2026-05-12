@@ -106,6 +106,36 @@ class MarketTest(object):
         print(f"resp:{res.json()}")
         return res.json()
 
+    def get_handicap_kline1m(self, params, uri='/deepcoin/market/handicap-kline1m'):
+        """ 獲取盤口歷史 K 線 1 m
+        https://www.deepcoin.com/docs/zh/DeepCoinMarket/handicapKline1m
+        GET /deepcoin/market/handicap-kline1m
+        """
+        url = '{}{}'.format(self.host, uri)
+        res = requests.request('GET', url, params=params)
+        print(f"resp:{res.json()}")
+        return res.json()
+
+    def get_handicap_orderbook(self, params, uri='/deepcoin/market/handicap-orderbook'):
+        """ 獲取盤口歷史訂單簿
+        https://www.deepcoin.com/docs/zh/DeepCoinMarket/handicapOrderbook
+        GET /deepcoin/market/handicap-orderbook
+        """
+        url = '{}{}'.format(self.host, uri)
+        res = requests.request('GET', url, params=params)
+        print(f"resp:{res.json()}")
+        return res.json()
+
+    def get_handicap_trade(self, params, uri='/deepcoin/market/handicap-trade'):
+        """ 獲取盤口歷史成交數據
+        https://www.deepcoin.com/docs/zh/DeepCoinMarket/handicapTrade
+        GET /deepcoin/market/handicap-trade
+        """
+        url = '{}{}'.format(self.host, uri)
+        res = requests.request('GET', url, params=params)
+        print(f"resp:{res.json()}")
+        return res.json()
+
 class AccountTest(object):
     def __init__(self):
         self.__api_key = api_key()['__api_key']
@@ -131,6 +161,16 @@ class AccountTest(object):
         https://www.deepcoin.com/docs/zh/DeepCoinAccount/getAccountBalance
         GET /deepcoin/account/balances
         """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
+    def get_account_uid(self, uri='/deepcoin/account/uid'):
+        """ 查詢當前用戶 UID
+        https://www.deepcoin.com/docs/zh/DeepCoinAccount/getUID
+        GET /deepcoin/account/uid
+        """
+        params = {}
         handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
         r = handler.request_app(params)
         return r
@@ -179,6 +219,15 @@ class TradeTest(object):
         r = handler.request_app(params)
         return r
 
+    def post_batch_order(self, params, uri='/deepcoin/trade/batch-orders'):
+        """ 批量下單（單次最多下 5 筆訂單）
+        https://www.deepcoin.com/docs/zh/DeepCoinTrade/batchOrders
+        POST /deepcoin/trade/batch-orders
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
+        r = handler.request_app(params)
+        return r
+
     # 撤單
     def cancel_order(self, params, uri='/deepcoin/trade/cancel-order'):
         """ 撤單
@@ -218,11 +267,19 @@ class TradeTest(object):
         r = handler.request_app(params)
         return r
 
-    # 一鍵撤單
     def cancel_all_orders(self, params, uri='/deepcoin/trade/swap/cancel-all'):
         """ 一鍵撤單
         https://www.deepcoin.com/docs/zh/DeepCoinTrade/cancelAllOrder
         POST /deepcoin/trade/swap/cancel-all
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
+        r = handler.request_app(params)
+        return r
+
+    def cancel_all_trigger_orders(self, params, uri='/deepcoin/trade/swap/cancel-trigger-all'):
+        """ 條件單一鍵撤單
+        https://www.deepcoin.com/docs/zh/DeepCoinTrade/cancelTriggerAll
+        POST /deepcoin/trade/swap/cancel-trigger-all
         """
         handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
         r = handler.request_app(params)
@@ -252,6 +309,15 @@ class TradeTest(object):
         GET /deepcoin/trade/finishOrderByID
         """
         handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
+    def get_batch_orders(self, params, uri='/deepcoin/trade/batch-order-query'):
+        """ 批量查詢訂單（單次最多查詢 5 筆訂單）
+        https://www.deepcoin.com/docs/zh/DeepCoinTrade/batchOrderQuery
+        POST /deepcoin/trade/batch-order-query
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
         r = handler.request_app(params)
         return r
 
@@ -538,7 +604,7 @@ class AssetTest(object):
         return r
 
     def withdraw_list(self, params, uri='/deepcoin/asset/withdraw-list'):
-        """ 獲取提現紀錄
+        """ 獲取提幣紀錄
         https://www.deepcoin.com/docs/zh/assets/withdraw
         GET /deepcoin/asset/withdraw-list
         """
@@ -546,7 +612,15 @@ class AssetTest(object):
         r = handler.request_app(params)
         return r
 
-    # 查詢充值鏈列表
+    def withdraw_status(self, params, uri='/deepcoin/asset/withdrawal-status'):
+        """ 獲取提幣狀態
+        https://www.deepcoin.com/docs/zh/assets/withdraw#%E6%8F%90%E5%B8%81%E7%8A%B6%E6%80%81
+        GET /deepcoin/asset/withdrawal-status
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
     def get_recharge_chain_list(self, params, uri='/deepcoin/asset/recharge-chain-list'):
         """ 查詢充值鏈列表
         https://www.deepcoin.com/docs/zh/assets/chainlist
@@ -562,6 +636,60 @@ class AssetTest(object):
         POST /deepcoin/asset/transfer
         """
         handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
+        r = handler.request_app(params)
+        return r
+
+    def withdraw(self, params, uri='/deepcoin/asset/withdrawal'):
+        """ 提幣
+        https://www.deepcoin.com/docs/zh/assets/withdrawal
+        POST /deepcoin/asset/withdrawal
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
+        r = handler.request_app(params)
+        return r
+
+    def cancel_withdraw(self, params, uri='/deepcoin/asset/cancel-withdrawal'):
+        """ 取消提幣
+        https://www.deepcoin.com/docs/zh/assets/cancelWithdrawal
+        POST /deepcoin/asset/cancel-withdrawal
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
+        r = handler.request_app(params)
+        return r
+
+    def get_withdraw_assets(self, params, uri='/deepcoin/asset/withdraw-assets'):
+        """ 查詢提幣資產
+        https://www.deepcoin.com/docs/zh/assets/withdrawAssets
+        GET /deepcoin/asset/withdraw-assets
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
+    def get_withdraw_chain_list(self, params, uri='/deepcoin/asset/withdraw-chains'):
+        """ 查詢提幣鏈列表
+        https://www.deepcoin.com/docs/zh/assets/chainlist
+        GET /deepcoin/asset/recharge-chain-list
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
+    def get_withdraw_addresses(self, params, uri='/deepcoin/asset/withdraw-addresses'):
+        """ 查詢提幣地址白名單
+        https://www.deepcoin.com/docs/zh/assets/withdrawAddresses
+        GET /deepcoin/asset/withdraw-addresses
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
+    def get_withdraw_config(self, params, uri='/deepcoin/asset/withdraw-config'):
+        """ 提幣聚合配置
+        https://www.deepcoin.com/docs/zh/assets/withdrawConfig
+        GET /deepcoin/asset/withdraw-config
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
         r = handler.request_app(params)
         return r
 

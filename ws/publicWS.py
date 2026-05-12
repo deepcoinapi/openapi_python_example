@@ -28,40 +28,43 @@ def on_open(ws):
         while True:
             ws.send("ping")
             print("Sent: ping")
-            time.sleep(30)
+            time.sleep(10)
 
     threading.Thread(target=send_heartbeat, daemon=True).start()
 
     ### 最新行情
-    # request_data = {
-    #     "SendTopicAction": {
-    #         "Action": "1",
-    #         "FilterValue": "DeepCoin_ETHUSDT",
-    #         "LocalNo": 111,
-    #         "ResumeNo": -2,
-    #         "TopicID": "7"
-    #     }
-    # }
-    ### 最近成交
     request_data = {
         "SendTopicAction": {
             "Action": "1",
             "FilterValue": "DeepCoin_ETHUSDT",
             "LocalNo": 111,
             "ResumeNo": -2,
-            "TopicID": "2"
+            "TopicID": "7"
         }
     }
+
+    ### 最近成交
+    # request_data = {
+    #     "SendTopicAction": {
+    #         "Action": "1",
+    #         "FilterValue": "DeepCoin_ETHUSDT",
+    #         "LocalNo": 111,
+    #         "ResumeNo": -2,
+    #         "TopicID": "2"
+    #     }
+    # }
+
     ### K線（僅支持一分鐘）
     # request_data = {
     #     "SendTopicAction": {
     #         "Action": "1",
-    #         "FilterValue": "DeepCoin_BTCUSDT_1m",
+    #         "FilterValue": "DeepCoin_ETHUSDT_1m",
     #         "LocalNo": 6,
     #         "ResumeNo": -1,
     #         "TopicID": "11"
     #         }
     # }
+
     ### 25檔增量行情
     # request_data = {
     #     "SendTopicAction": {
@@ -72,6 +75,16 @@ def on_open(ws):
     #         "TopicID": "25"
     #     }
     # }
+
+    ### 強平訂單
+    # request_data = {
+    #   "SendTopicAction": {
+    #     "Action": "1",
+    #     "LocalNo": 0,
+    #     "TopicID": "30"
+    #   }
+    # }
+
     ws.send(json.dumps(request_data))
     print(f"Sent: {json.dumps(request_data)}")
 

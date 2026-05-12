@@ -14,9 +14,9 @@ params = {
     # 'closePosId': '',
     'ordType': 'limit',
     'sz': '10',
-    'px': '85000',
+    'px': '60000',
     # 'reduceOnly': 'false',
-    'tgtCcy': 'base_ccy',
+    # 'tgtCcy': 'base_ccy',
     'tpTriggerPx': '100000',
     'slTriggerPx': '80000',
 }
