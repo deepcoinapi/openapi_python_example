@@ -56,8 +56,18 @@ class MarketTest(object):
         print(f"resp:{res.json()}")
         return res.json()
 
+    def get_mark_price(self, params, uri='/deepcoin/market/mark-price'):
+        """ 獲取標記價格
+        https://www.deepcoin.com/docs/zh/DeepCoinMarket/getMarkPrice
+        GET /deepcoin/market/mark-price
+        """
+        url = '{}{}'.format(self.host, uri)
+        res = requests.request('GET', url, params=params)
+        print(f"resp:{res.json()}")
+        return res.json()
+
     def get_trades(self, params, uri='/deepcoin/market/trades'):
-        """ 獲取交易產品指數 K 線數據
+        """ 獲取成交紀錄
         https://www.deepcoin.com/docs/zh/DeepCoinMarket/getTrades
         GET /deepcoin/market/trades
         """
@@ -67,7 +77,7 @@ class MarketTest(object):
         return res.json()
 
     def get_mark_kline(self, params, uri='/deepcoin/market/mark-price-candles'):
-        """ 獲取交易產品指數 K 線數據
+        """ 獲取交易產品標記價 K 線數據
         https://www.deepcoin.com/docs/zh/DeepCoinMarket/getMarkKlineData
         GET /deepcoin/market/mark-price-candles
         """
@@ -77,7 +87,7 @@ class MarketTest(object):
         return res.json()
 
     def get_step_margin(self, params, uri='/deepcoin/market/step-margin'):
-        """ 獲取交易產品指數 K 線數據
+        """ 獲取交易產品階梯保證金信息
         https://www.deepcoin.com/docs/zh/DeepCoinMarket/getStepMargin
         GET /deepcoin/market/step-margin
         """
@@ -87,7 +97,7 @@ class MarketTest(object):
         return res.json()
 
     def get_book_spread(self, params, uri='/deepcoin/market/book-spread'):
-        """ 獲取交易產品指數 K 線數據
+        """ 獲取交易產品深度點差信息
         https://www.deepcoin.com/docs/zh/DeepCoinMarket/getBookSpread
         GET /deepcoin/market/book-spread
         """
@@ -97,9 +107,19 @@ class MarketTest(object):
         return res.json()
 
     def get_time(self, uri='/deepcoin/market/time'):
-        """ 獲取交易產品指數 K 線數據
+        """ 獲取系統時間
         https://www.deepcoin.com/docs/zh/DeepCoinMarket/systemInfo
         GET /deepcoin/market/time
+        """
+        url = '{}{}'.format(self.host, uri)
+        res = requests.request('GET', url)
+        print(f"resp:{res.json()}")
+        return res.json()
+
+    def get_ping(self, uri='/deepcoin/market/ping'):
+        """ 獲取系統時間
+        https://www.deepcoin.com/docs/zh/DeepCoinMarket/systemInfo
+        GET /deepcoin/market/ping
         """
         url = '{}{}'.format(self.host, uri)
         res = requests.request('GET', url)
@@ -136,6 +156,36 @@ class MarketTest(object):
         print(f"resp:{res.json()}")
         return res.json()
 
+    def get_oi_volume(self, params, uri='/deepcoin/market/open-interest-volume'):
+        """ 獲取持倉量和交易量
+        https://www.deepcoin.com/docs/zh/DeepCoinMarket/openInterestVolume
+        GET /deepcoin/market/open-interest-volume
+        """
+        url = '{}{}'.format(self.host, uri)
+        res = requests.request('GET', url, params=params)
+        print(f"resp:{res.json()}")
+        return res.json()
+
+    def get_long_short_ratio(self, params, uri='/deepcoin/market/long-short-ratio'):
+        """ 獲取多空人數比
+        https://www.deepcoin.com/docs/zh/DeepCoinMarket/longShortRatio
+        GET /deepcoin/market/long-short-ratio
+        """
+        url = '{}{}'.format(self.host, uri)
+        res = requests.request('GET', url, params=params)
+        print(f"resp:{res.json()}")
+        return res.json()
+
+    def get_taker_volume(self, params, uri='/deepcoin/market/taker-volume'):
+        """ 獲取主動買賣量
+        https://www.deepcoin.com/docs/zh/DeepCoinMarket/takerVolume
+        GET /deepcoin/market/taker-volume
+        """
+        url = '{}{}'.format(self.host, uri)
+        res = requests.request('GET', url, params=params)
+        print(f"resp:{res.json()}")
+        return res.json()
+
 class AccountTest(object):
     def __init__(self):
         self.__api_key = api_key()['__api_key']
@@ -165,12 +215,30 @@ class AccountTest(object):
         r = handler.request_app(params)
         return r
 
+    def get_all_balances(self, params, uri='/deepcoin/account/all-balances'):
+        """ 獲取統一帳戶餘額
+        https://www.deepcoin.com/docs/zh/DeepCoinAccount/getAllAccountBalances
+        GET /deepcoin/account/all-balances
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
     def get_account_uid(self, uri='/deepcoin/account/uid'):
         """ 查詢當前用戶 UID
         https://www.deepcoin.com/docs/zh/DeepCoinAccount/getUID
         GET /deepcoin/account/uid
         """
         params = {}
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
+    def get_trade_fee(self, params, uri='/deepcoin/account/trade-fee'):
+        """ 查詢當前用戶 UID
+        https://www.deepcoin.com/docs/zh/DeepCoinAccount/getTradeFee
+        GET /deepcoin/account/trade-fee
+        """
         handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
         r = handler.request_app(params)
         return r
@@ -200,6 +268,24 @@ class AccountTest(object):
         POST /deepcoin/account/set-leverage
         """
         handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
+        r = handler.request_app(params)
+        return r
+
+    def get_leverage_info(self, params, uri='/deepcoin/account/leverage-info'):
+        """ 查詢槓桿倍數
+        https://www.deepcoin.com/docs/zh/DeepCoinAccount/accountLeverageInfo
+        GET /deepcoin/account/leverage-info
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
+        r = handler.request_app(params)
+        return r
+
+    def get_history_positions(self, params, uri='/deepcoin/account/positions-history'):
+        """ 獲取歷史持倉
+        https://www.deepcoin.com/docs/zh/DeepCoinAccount/accountPositionsHistory
+        GET /deepcoin/account/positions-history
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'GET')
         r = handler.request_app(params)
         return r
 
@@ -398,7 +484,6 @@ class TradeTest(object):
         https://www.deepcoin.com/docs/zh/DeepCoinTrade/closePositionByIds
         POST /deepcoin/trade/close-position-by-ids
         """
-
         handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
         r = handler.request_app(params)
         return r
@@ -425,6 +510,24 @@ class TradeTest(object):
         """ 取消持倉止盈止損
         https://www.deepcoin.com/docs/zh/DeepCoinTrade/cancelPositionSlTp
         POST /deepcoin/trade/cancel-position-sltp
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
+        r = handler.request_app(params)
+        return r
+
+    def merge_positions(self, params, uri='/deepcoin/trade/merge-positions'):
+        """ 分倉合併倉位
+        https://www.deepcoin.com/docs/zh/DeepCoinTrade/mergePositions
+        POST /deepcoin/trade/merge-positions
+        """
+        handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
+        r = handler.request_app(params)
+        return r
+
+    def increase_positions(self, params, uri='/deepcoin/trade/increase-position'):
+        """ 分倉加倉倉位
+        https://www.deepcoin.com/docs/zh/DeepCoinTrade/increasePosition
+        POST /deepcoin/trade/increase-position
         """
         handler = BaseMethod(self.__api_key, self.__secret_key, self.__passphrase, self.host, uri, 'POST')
         r = handler.request_app(params)
